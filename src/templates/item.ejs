@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('./partials/head'); %>
+    </head>
+<body class="container">
+    <header>
+        <%- include('./partials/header'); %>
+    </header>
+
+    <main>
+        <%if (typeof(error) !== "undefined" && error === true) { %>
+            <div class="alert alert-danger" role="alert">
+              <%= messages %>
+            </div>
+          <% } %>
+
+        <div class="jumbotron">
+            <h1>Daftar Barang</h1>
+        </div>
+
+        <form action="/item/" method="post">
+            <label for="item_name">Nama Barang:</label><br>
+            <input type="text" id="item_name" name="item_name" value=""><br>
+            <label for="item_code">SKU:</label><br>
+            <input type="text" id="item_code" name="item_code" value=""><br>
+            <label for="stock">Stock:</label><br>
+            <input type="text" id="stock" name="stock" value=""><br><br>
+            <button id="buttonClick" type="submit" class="btn btn-primary mb-2">Submit</button>
+        </form>
+
+        <form id="/item/" role="search">
+            <input type="search" id="query" name="q"
+                placeholder="Search..."
+                aria-label="Search through site content">
+            <button>Search</button>
+        </form>
+        <br>
+        <div class="row">
+            <table>
+                <tr>
+                    <th>Nama Produk</th>
+                    <th>SKU</th>
+                    <th>Stok</th>
+                </tr>
+                <% for(let i = 0; i < items.length; i++) { %>
+                <tr>
+                    <td><%= items[i].item_name %></td>
+                    <td><%= items[i].item_code %></td>
+                    <td><%= items[i].stock %></td>
+                </tr>
+                <% } %>
+              </table>
+
+        </div>        
+    </main>
+
+    <footer>
+        <%- include('./partials/footer'); %>
+    </footer>
+
+</body>
+</html>
+
+<style>
+    table, td, th {
+       border: 1px solid;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+</style>

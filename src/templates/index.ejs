@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('./partials/head'); %>
+    </head>
+<body class="container">
+    <header>
+        <%- include('./partials/header'); %>
+    </header>
+
+    <main>
+        <%if (typeof(error) !== "undefined" && error === true) { %>
+            <div class="alert alert-danger" role="alert">
+              <%= messages %>
+            </div>
+          <% } %>
+
+        <div class="jumbotron">
+            <h1>SKU Locator</h1>
+        </div>
+
+        <form id="/" role="search">
+            <input type="search" id="query" name="q"
+             placeholder="Search..."
+             aria-label="Search through site content">
+            <button>Search</button>
+        </form>
+        <br>
+        <div class="row">
+
+            <table>
+                <tr>
+                    <th>Nama Produk</th>
+                    <th>SKU</th>
+                    <th>Stok</th>
+                    <th>Nama Rak</th>
+                    <th>Kode Rak</th>
+                </tr>
+                <% for(let i = 0; i < skuLocations.length; i++) { %>
+                <tr>
+                    <td><%= skuLocations[i].item_name %></td>
+                    <td><%= skuLocations[i].item_code %></td>
+                    <td><%= skuLocations[i].stock %></td>
+                    <td><%= skuLocations[i].bin_name %></td>
+                    <td><%= skuLocations[i].bin_code %></td>
+                </tr>
+                <% } %>
+              </table>
+
+        </div>        
+    </main>
+
+    <footer>
+        <%- include('./partials/footer'); %>
+    </footer>
+
+</body>
+</html>
+
+<style>
+    table, td, th {
+       border: 1px solid;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+</style>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('./partials/head'); %>
+    </head>
+<body class="container">
+    <header>
+        <%- include('./partials/header'); %>
+    </header>
+
+    <main>
+        <%if (typeof(error) !== "undefined" && error === true) { %>
+            <div class="alert alert-danger" role="alert">
+              <%= messages %>
+            </div>
+          <% } %>
+
+        <div class="jumbotron">
+            <h1>Daftar Rak</h1>
+        </div>
+
+        <form action="/bin/" method="post">
+            <label for="bin_name">Nama Rak:</label><br>
+            <input type="text" id="bin_name" name="bin_name" value=""><br>
+            <label for="bin_code">Kode Rak:</label><br>
+            <input type="text" id="bin_code" name="bin_code" value=""><br><br>
+            <button id="buttonClick" type="submit" class="btn btn-primary mb-2">Submit</button>
+        </form>
+
+
+        <form id="/bin/" role="search">
+            <input type="search" id="query" name="q"
+                placeholder="Search..."
+                aria-label="Search through site content">
+            <button>Search</button>
+        </form>
+        <br>
+        <div class="row">
+
+            <table>
+                <tr>
+                    <th>Nama Rak</th>
+                    <th>Kode Rak</th>
+                </tr>
+                <% for(let i = 0; i < bins.length; i++) { %>
+                <tr>
+                    <td><%= bins[i].bin_name %></td>
+                    <td><%= bins[i].bin_code %></td>
+                </tr>
+                <% } %>
+              </table>
+
+        </div>        
+    </main>
+
+    <footer>
+        <%- include('./partials/footer'); %>
+    </footer>
+
+</body>
+</html>
+
+<style>
+    table, td, th {
+       border: 1px solid;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+</style>
