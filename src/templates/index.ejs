@@ -18,11 +18,27 @@
         <div class="jumbotron">
             <h1>SKU Locator</h1>
         </div>
-
+        <form action="/bin-item/" method="post">
+            <label for="sku">SKU:</label>
+            <select id="itemSelection" name="item_id">
+                <option></option>
+                <% for(let i = 0; i < items.length; i++) { %>
+                    <option value="<%= items[i].item_id %>" name="item_id"><%= items[i].item_code %></option>
+                <% } %>
+            </select>
+            <label for="bin">Kode Rak:</label>
+            <select id="binSelection" name="bin_id">
+                <option></option>
+                <% for(let i = 0; i < bins.length; i++) { %>
+                    <option value="<%= bins[i].bin_id %>" name="bin_id"><%= bins[i].bin_code %></option>
+                <% } %>
+            </select>
+            <button id="buttonClick" type="submit" class="btn btn-primary mb-2">Simpan</button>
+        </form>
+        <p id="demo"></p>
         <form id="/" role="search">
             <input type="search" id="query" name="q"
-             placeholder="Search..."
-             aria-label="Search through site content">
+             placeholder="Cari SKU/Kode Rak">
             <button>Search</button>
         </form>
         <br>
@@ -35,6 +51,7 @@
                     <th>Stok</th>
                     <th>Nama Rak</th>
                     <th>Kode Rak</th>
+                    <th>Action</th>
                 </tr>
                 <% for(let i = 0; i < skuLocations.length; i++) { %>
                 <tr>
@@ -43,17 +60,16 @@
                     <td><%= skuLocations[i].stock %></td>
                     <td><%= skuLocations[i].bin_name %></td>
                     <td><%= skuLocations[i].bin_code %></td>
+                    <td><button onclick='deleteBIA("<%= skuLocations[i].bin_item_activity_id %>")'>hapus</button></td>
                 </tr>
                 <% } %>
               </table>
 
         </div>        
     </main>
-
     <footer>
         <%- include('./partials/footer'); %>
     </footer>
-
 </body>
 </html>
 
@@ -67,3 +83,32 @@
         border-collapse: collapse;
     }
 </style>
+<script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js"></script>
+<link href="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet">
+<script>
+    $(document).ready(function(){ 
+        $('#datatext').on('keyup',function(){
+            $('#contentselect').focus().attr('size', 3);
+        }); 
+    });
+    function deleteBIA(id) {
+        axios.delete('http://localhost:3030/bin-item/', {data: {bin_item_activity_id: id}
+        }).then(function(res) {
+            if (res.data.success === 'ok') {
+                location.reload();
+            }
+        }).catch(function(err) {
+            alert(err.message);
+        });
+    };
+
+    function myFunction() {
+      let text = document.getElementById("bin_name").value;
+      document.getElementById("demo").innerHTML = "You wrote: " + text;
+    }
+
+    $('#itemSelection').editableSelect();
+    $('#binSelection').editableSelect();
+
+</script>

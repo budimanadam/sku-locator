@@ -1,21 +1,20 @@
+const {getAllBinItems, getAllItems, getAllBins} = require('../utils/helper');
+
 const getHome = async (req, rep) => {
-    let q = '';
-    let param = req.query;
-    let filter = '';
-    if (param && param.q) {
-        filter = 'where i.item_code like ? or i.item_name like ? or b.bin_code like ? or b.bin_name like ?';
-        q = `%${param.q}%`
-    }
-    console.log('filter');
-    console.log(filter);
-    const [skuLocations] = await req.db.execute(`
-        select i.item_name, i.item_code, i.stock, b.bin_name, b.bin_code
-        from bin_item_activity bia 
-        join bin b on b.bin_id = bia.bin_id 
-        join item i on i.item_id = bia.item_id 
-        ${filter}
-    `, [q, q, q, q]);
-    return rep.view("/templates/index.ejs", { skuLocations });
+    return rep.view("/templates/index.ejs", { skuLocations: await getAllBinItems(req), items: await getAllItems(req), bins: await getAllBins(req) });
 }
 
-module.exports = getHome;
+const deleteBinItemRecord = async (req, rep) => {
+    await req.db.execute(`delete from bin_item_activity where bin_item_activity_id = ?`, [req.body.bin_item_activity_id]);
+    return rep.code(200).send({success: 'ok'});
+}
+
+const postBinItemRecord = async (req, rep) => {
+    await req.db.execute(`
+        INSERT INTO bin_item_activity (bin_id , item_id) 
+        values ((select bin_id from bin where bin_code = ?), (select item_id from item where item_code = ?))`, [req.body.bin_id, req.body.item_id]);
+    return rep.view("/templates/index.ejs", { skuLocations: await getAllBinItems(req), items: await getAllItems(req), bins: await getAllBins(req) });
+
+}
+
+module.exports = {getHome, deleteBinItemRecord, postBinItemRecord};

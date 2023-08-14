@@ -26,13 +26,12 @@
             <input type="text" id="bin_code" name="bin_code" value=""><br><br>
             <button id="buttonClick" type="submit" class="btn btn-primary mb-2">Submit</button>
         </form>
-
-
+        <br>
         <form id="/bin/" role="search">
             <input type="search" id="query" name="q"
-                placeholder="Search..."
+                placeholder="Cari SKU/Nama Produk"
                 aria-label="Search through site content">
-            <button>Search</button>
+            <button>Cari</button>
         </form>
         <br>
         <div class="row">
@@ -41,11 +40,13 @@
                 <tr>
                     <th>Nama Rak</th>
                     <th>Kode Rak</th>
+                    <th>Action</th>
                 </tr>
                 <% for(let i = 0; i < bins.length; i++) { %>
                 <tr>
                     <td><%= bins[i].bin_name %></td>
                     <td><%= bins[i].bin_code %></td>
+                    <td><button onclick='deleteBin("<%= bins[i].bin_id %>")'>hapus</button></td>
                 </tr>
                 <% } %>
               </table>
@@ -70,3 +71,15 @@
         border-collapse: collapse;
     }
 </style>
+<script>
+    function deleteBin(id) {
+        axios.delete('http://localhost:3030/bin/', {data: {bin_id: id}
+        }).then(function(res) {
+            if (res.data.success === 'ok') {
+                location.reload();
+            }
+        }).catch(function(err) {
+            alert(err.message);
+        });
+    };
+</script>

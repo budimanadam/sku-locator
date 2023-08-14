@@ -10,4 +10,9 @@ const postBin = async (req, rep) => {
     return rep.view("/templates/bin.ejs", { bins: await getAllBins(req) });
 };
 
-module.exports = {getBins, postBin};
+const deleteBin = async (req, rep) => {
+    await req.db.execute(`delete from bin where bin_id = ?`, [req.body.bin_id]);
+    return rep.code(200).send({success: 'ok'});
+}
+
+module.exports = {getBins, postBin, deleteBin};

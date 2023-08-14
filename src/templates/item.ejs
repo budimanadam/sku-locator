@@ -28,11 +28,10 @@
             <input type="text" id="stock" name="stock" value=""><br><br>
             <button id="buttonClick" type="submit" class="btn btn-primary mb-2">Submit</button>
         </form>
-
+        <br>
         <form id="/item/" role="search">
             <input type="search" id="query" name="q"
-                placeholder="Search..."
-                aria-label="Search through site content">
+                placeholder="Cari Nama Rak/Kode Rak">
             <button>Search</button>
         </form>
         <br>
@@ -42,12 +41,14 @@
                     <th>Nama Produk</th>
                     <th>SKU</th>
                     <th>Stok</th>
+                    <th>Action</th>
                 </tr>
                 <% for(let i = 0; i < items.length; i++) { %>
                 <tr>
                     <td><%= items[i].item_name %></td>
                     <td><%= items[i].item_code %></td>
                     <td><%= items[i].stock %></td>
+                    <td><button onclick='deleteItem("<%= items[i].item_id %>")'>hapus</button></td>
                 </tr>
                 <% } %>
               </table>
@@ -72,3 +73,18 @@
         border-collapse: collapse;
     }
 </style>
+<script type="module">
+    import config from '../../config';
+</script>
+<script>
+    function deleteItem(id) {
+        axios.delete(`https://localhost:3030/item/`, {data: {item_id: id}
+        }).then(function(res) {
+            if (res.data.success === 'ok') {
+                location.reload();
+            }
+        }).catch(function(err) {
+            alert(err.message);
+        });
+    };
+</script>

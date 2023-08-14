@@ -30,6 +30,12 @@ module.exports = async function (fastify, opts) {
     options: Object.assign({}, opts)
   })
 
+  // This loads all plugins defined in routes
+  fastify.register(AutoLoad, {
+    dir: path.join(__dirname, 'templates'),
+    options: Object.assign({}, opts)
+  })
+
   fastify.addHook('onRequest', async (request, reply) => {
     request.db = await connect();
   })
