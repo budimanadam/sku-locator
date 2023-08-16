@@ -10,13 +10,13 @@ const getItemsJson = async (req, rep) => {
 
 const postItem = async (req, rep) => {
     const body = req.body;
-    await req.db.execute(`insert into item (item_name, item_code, stock) values (?, ?, ?)`, [body.item_name, body.item_code, body.stock]);
+    await req.systemDb.query(`insert into item (item_name, item_code, stock) values ($1, $2, $3)`, [body.item_name, body.item_code, body.stock]);
     return rep.view("/templates/item.ejs", { items: await getAllItems(req) });
 };
 
 const deleteItem = async (req, rep) => {
     try {
-        await req.db.execute(`delete from item where item_id = ?`, [req.body.item_id]);
+        await req.systemDb.query(`delete from item where item_id = $1`, [req.body.item_id]);
         return rep.code(200).send({success: 'ok'});   
     } catch (error) {
         throw error;

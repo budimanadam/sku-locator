@@ -3,6 +3,7 @@
 const path = require('path')
 const AutoLoad = require('@fastify/autoload')
 const connect = require('./utils/mysql-helper');
+const { pgSysDb } = require('./utils/postgres-helper');
 
 // Pass --options via CLI arguments in command to enable these options.
 module.exports.options = {}
@@ -36,8 +37,10 @@ module.exports = async function (fastify, opts) {
     options: Object.assign({}, opts)
   })
 
-  fastify.addHook('onRequest', async (request, reply) => {
-    request.db = await connect();
+  fastify.addHook('onRequest', (request, reply, hookDone) => {
+    // request.db = connect();
+    request.systemDb = pgSysDb;
+    hookDone();
   })
 
   // This loads and sets fastify/cors

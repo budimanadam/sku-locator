@@ -6,12 +6,12 @@ const getBins = async (req, rep) => {
 
 const postBin = async (req, rep) => {
     const body = req.body;
-    await req.db.execute(`insert into bin (bin_name, bin_code) values (?, ?)`, [body.bin_name, body.bin_code]);
+    await req.systemDb.query(`insert into bin (bin_name, bin_code) values ($1, $2)`, [body.bin_name, body.bin_code]);
     return rep.view("/templates/bin.ejs", { bins: await getAllBins(req) });
 };
 
 const deleteBin = async (req, rep) => {
-    await req.db.execute(`delete from bin where bin_id = ?`, [req.body.bin_id]);
+    await req.systemDb.query(`delete from bin where bin_id = $1`, [req.body.bin_id]);
     return rep.code(200).send({success: 'ok'});
 }
 

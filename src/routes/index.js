@@ -1,5 +1,5 @@
 'use strict'
-const {getHome, deleteBinItemRecord, postBinItemRecord} = require('../handler/home');
+const {getHome, deleteBinItemRecord, postBinItemRecord, getSkuBin} = require('../handler/home');
 
 module.exports = async function(fastify, opts) {
     fastify.route({
@@ -11,6 +11,12 @@ module.exports = async function(fastify, opts) {
             description: 'Return to Home View',
             tags: ['Home']
         }
+    });
+
+    fastify.route({
+        method: 'GET',
+        url: '/sku-bin',
+        handler: getSkuBin
     });
 
     fastify.route({
