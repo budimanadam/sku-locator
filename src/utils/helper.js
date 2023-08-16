@@ -33,6 +33,8 @@ async function getAllBins(req) {
 async function getAllBinItems(req) {
   let q = '';
     let param = req.query;
+    // console.log('param.search[value]');
+    // console.log(param.search[value]);
     let filter = '';
     if (param && param.q) {
         filter = 'where i.item_code like ? or i.item_name like ? or b.bin_code like ? or b.bin_name like ?';
