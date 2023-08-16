@@ -8,7 +8,7 @@ const bluebird = require('bluebird');
 
 
 function connect() {
-    return mysql.createConnection({host:config.HOST, user: config.USER, password: config.PASSWORD, database: config.DATABASE, Promise: bluebird});
+    return mysql.createConnection({host:config.HOST, user: config.USER, password: config.PASSWORD, database: config.DATABASE, port: config.DB_PORT, Promise: bluebird});
 }
 
 module.exports = connect;

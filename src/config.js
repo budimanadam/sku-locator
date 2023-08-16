@@ -5,6 +5,7 @@ const config = {
   USER: process.env.USER,
   PASSWORD: process.env.PASSWORD,
   DATABASE: process.env.DATABASE,
+  DB_PORT: process.env.DB_PORT,
   PORT: process.env.PORT,
   API_URL: process.env.API_URL
 };
