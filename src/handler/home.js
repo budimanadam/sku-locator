@@ -1,7 +1,10 @@
 const {getAllBinItems, getAllItems, getAllBins} = require('../utils/helper');
 
 const getHome = async (req, rep) => {
-    return rep.view("/templates/index.ejs", { skuLocations: await getAllBinItems(req), items: await getAllItems(req), bins: await getAllBins(req)});
+    const bins = await getAllBins(req);
+    const items = await getAllItems(req);
+    const skuLocations = await getAllBinItems(req);
+    return rep.view("/templates/index.ejs", { skuLocations, items, bins});
 }
 
 const getSkuBin = async (req, rep) => {
@@ -17,7 +20,7 @@ const deleteBinItemRecord = async (req, rep) => {
 const postBinItemRecord = async (req, rep) => {
     await req.systemDb.query(`
         INSERT INTO bin_item_activity (bin_id , item_id) 
-        values ((select bin_id from bin where bin_code = $1 limit 1), (select item_id from item where item_code = $2 limit 1))`, [req.body.bin_id, req.body.item_id]);
+        values ((select bin_id from bin where bin_id = $1 limit 1), (select item_id from item where item_id = $2 limit 1))`, [req.body.bin_id, req.body.item_id]);
     return rep.view("/templates/index.ejs", { skuLocations: await getAllBinItems(req), items: await getAllItems(req), bins: await getAllBins(req)});
 
 }

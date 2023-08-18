@@ -2,6 +2,11 @@ async function getAllItems(req) {
   let q = '';
   let param = req.query;
   let filter = '';
+  let limit = '';
+  let page = param.page || 1;
+  let pageSize = param.pageSize || 5;
+  const offset = (page - 1) * pageSize;
+  limit = `limit ${pageSize} offset ${offset}`;
   if (param && param.q) {
     filter = 'where i.item_code like $1 or i.item_name like $1';
     q = `%${param.q}%`;
@@ -18,6 +23,11 @@ async function getAllBins(req) {
   let q = '';
   let param = req.query;
   let filter = '';
+  let limit = '';
+  let page = param.page || 1;
+  let pageSize = param.pageSize || 5;
+  const offset = (page - 1) * pageSize;
+  limit = `limit ${pageSize} offset ${offset}`;
   if (param && param.q) {
     filter = 'where b.bin_name like $1 or b.bin_code like $1';
     q = `%${param.q}%`;
