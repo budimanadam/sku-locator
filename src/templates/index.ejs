@@ -92,8 +92,9 @@
             $('#contentselect').focus().attr('size', 3);
         }); 
     });
+    let apiUrl = '<%= process.env.API_URL %>';
     function deleteBIA(id) {
-        axios.delete('http://localhost:3030/bin-item/', {data: {bin_item_activity_id: id}
+        axios.delete(`${apiUrl}/`, {data: {bin_item_activity_id: id}
         }).then(function(res) {
             if (res.data.success === 'ok') {
                 location.reload();

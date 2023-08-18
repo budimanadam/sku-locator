@@ -72,8 +72,9 @@
     }
 </style>
 <script>
+    let apiUrl = '<%= process.env.API_URL %>';
     function deleteBin(id) {
-        axios.delete('http://localhost:3030/bin/', {data: {bin_id: id}
+        axios.delete(`${apiUrl}/bin/`, {data: {bin_id: id}
         }).then(function(res) {
             if (res.data.success === 'ok') {
                 location.reload();

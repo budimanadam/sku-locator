@@ -1,15 +1,12 @@
 const {getAllBinItems, getAllItems, getAllBins} = require('../utils/helper');
 
 const getHome = async (req, rep) => {
-    return rep.view("/templates/index.ejs", { skuLocations: await getAllBinItems(req), items: await getAllItems(req), bins: await getAllBins(req) });
+    return rep.view("/templates/index.ejs", { skuLocations: await getAllBinItems(req), items: await getAllItems(req), bins: await getAllBins(req)});
 }
 
 const getSkuBin = async (req, rep) => {
     let res = await req.systemDb.query('select * from item');
-    console.log('res');
-    console.log(res);
     return;
-    return rep.view("/templates/index.ejs", { skuLocations: await getAllBinItems(req), items: await getAllItems(req), bins: await getAllBins(req) });
 }
 
 const deleteBinItemRecord = async (req, rep) => {
@@ -21,7 +18,7 @@ const postBinItemRecord = async (req, rep) => {
     await req.systemDb.query(`
         INSERT INTO bin_item_activity (bin_id , item_id) 
         values ((select bin_id from bin where bin_code = $1 limit 1), (select item_id from item where item_code = $2 limit 1))`, [req.body.bin_id, req.body.item_id]);
-    return rep.view("/templates/index.ejs", { skuLocations: await getAllBinItems(req), items: await getAllItems(req), bins: await getAllBins(req) });
+    return rep.view("/templates/index.ejs", { skuLocations: await getAllBinItems(req), items: await getAllItems(req), bins: await getAllBins(req)});
 
 }
 

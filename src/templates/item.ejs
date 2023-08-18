@@ -74,8 +74,9 @@
     }
 </style>
 <script>
+    let apiUrl = '<%= process.env.API_URL %>';
     function deleteItem(id) {
-        axios.delete('http://localhost:3030/item/', {data: {item_id: id}
+        axios.delete(`${apiUrl}/item/`, {data: {item_id: id}
         }).then(function(res) {
             if (res.data.success === 'ok') {
                 location.reload();

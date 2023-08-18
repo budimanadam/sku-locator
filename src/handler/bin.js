@@ -1,13 +1,13 @@
 const {getAllBins} = require('../utils/helper');
 
 const getBins = async (req, rep) => {
-    return rep.view("/templates/bin.ejs", { bins: await getAllBins(req) });
+    return rep.view("/templates/bin.ejs", { bins: await getAllBins(req)});
 }
 
 const postBin = async (req, rep) => {
     const body = req.body;
     await req.systemDb.query(`insert into bin (bin_name, bin_code) values ($1, $2)`, [body.bin_name, body.bin_code]);
-    return rep.view("/templates/bin.ejs", { bins: await getAllBins(req) });
+    return rep.view("/templates/bin.ejs", { bins: await getAllBins(req)});
 };
 
 const deleteBin = async (req, rep) => {

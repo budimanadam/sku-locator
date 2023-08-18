@@ -21,7 +21,7 @@ module.exports = async function(fastify, opts) {
 
     fastify.route({
         method: 'DELETE',
-        url: '/bin-item/',
+        url: '/',
         handler: deleteBinItemRecord,
         schema: {
             summary: 'Return Home',
