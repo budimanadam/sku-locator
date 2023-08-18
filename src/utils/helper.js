@@ -3,14 +3,14 @@ async function getAllItems(req) {
   let param = req.query;
   let filter = '';
   if (param && param.q) {
-    filter = 'where i.item_code like ? or i.item_name like ?';
+    filter = 'where i.item_code like $1 or i.item_name like $1';
     q = `%${param.q}%`;
   }
   const items = await req.systemDb.query(`
         select *
         from item i
         ${filter}
-    `, [q, q]);
+    `, [q]);
   return items;
 }
 
@@ -19,14 +19,14 @@ async function getAllBins(req) {
   let param = req.query;
   let filter = '';
   if (param && param.q) {
-    filter = 'where b.bin_name like ? or b.bin_code like ?';
+    filter = 'where b.bin_name like $1 or b.bin_code like $1';
     q = `%${param.q}%`;
   }
   const bins = await req.systemDb.query(`
         select *
         from bin b
         ${filter}
-    `, [q, q]);
+    `, [q]);
   return bins;
 }
 
@@ -35,7 +35,7 @@ async function getAllBinItems(req) {
     let param = req.query;
     let filter = '';
     if (param && param.q) {
-        filter = 'where i.item_code like ? or i.item_name like ? or b.bin_code like ? or b.bin_name like ?';
+        filter = 'where i.item_code ilike $1 or i.item_name ilike $1 or b.bin_code ilike $1 or b.bin_name ilike $1';
         q = `%${param.q}%`
     }
     const skuLocations = await req.systemDb.query(`
@@ -44,7 +44,7 @@ async function getAllBinItems(req) {
         join bin b on b.bin_id = bia.bin_id 
         join item i on i.item_id = bia.item_id 
         ${filter}
-    `, [q, q, q, q]);
+    `, [q]);
     return skuLocations;
 }
 

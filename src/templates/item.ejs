@@ -73,12 +73,9 @@
         border-collapse: collapse;
     }
 </style>
-<script type="module">
-    import config from '../../config';
-</script>
 <script>
     function deleteItem(id) {
-        axios.delete(`https://localhost:3030/item/`, {data: {item_id: id}
+        axios.delete('http://localhost:3030/item/', {data: {item_id: id}
         }).then(function(res) {
             if (res.data.success === 'ok') {
                 location.reload();

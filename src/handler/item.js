@@ -15,12 +15,8 @@ const postItem = async (req, rep) => {
 };
 
 const deleteItem = async (req, rep) => {
-    try {
-        await req.systemDb.query(`delete from item where item_id = $1`, [req.body.item_id]);
-        return rep.code(200).send({success: 'ok'});   
-    } catch (error) {
-        throw error;
-    }
+    await req.systemDb.query(`delete from item where item_id = $1`, [req.body.item_id]);
+    return rep.code(200).send({success: 'ok'});
 }
 
 module.exports = {getItems, postItem, deleteItem, getItemsJson};

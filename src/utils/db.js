@@ -1,8 +1,5 @@
 const config = require('../config');
 
-// 'postgres://localhost:5432/postgres'
-console.log('config');
-console.log(config);
 module.exports.systemDb = {
   client: 'pg',
   connection: {

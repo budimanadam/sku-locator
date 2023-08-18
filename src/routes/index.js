@@ -32,7 +32,7 @@ module.exports = async function(fastify, opts) {
 
     fastify.route({
         method: 'POST',
-        url: '/bin-item/',
+        url: '/',
         handler: postBinItemRecord,
         schema: {
             summary: 'Return Home',
