@@ -8,8 +8,8 @@ const getHome = async (req, rep) => {
 }
 
 const getSkuBin = async (req, rep) => {
-    let res = await req.systemDb.query('select * from item');
-    return;
+    const skuLocations = await getAllBinItems(req);
+    return rep.code(200).send({success: 'ok', data: skuLocations});
 }
 
 const deleteBinItemRecord = async (req, rep) => {
