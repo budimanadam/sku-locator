@@ -19,15 +19,13 @@
             <h1>Daftar Barang</h1>
         </div>
 
-        <form action="/item/" method="post">
-            <label for="item_name">Nama Barang:</label><br>
-            <input type="text" id="item_name" name="item_name" value=""><br>
-            <label for="item_code">SKU:</label><br>
-            <input type="text" id="item_code" name="item_code" value=""><br>
-            <label for="stock">Stock:</label><br>
-            <input type="text" id="stock" name="stock" value=""><br><br>
-            <button id="buttonClick" type="submit" class="btn btn-primary mb-2">Submit</button>
-        </form>
+        <label for="item_name">Nama Barang:</label><br>
+        <input type="text" id="item_name" name="item_name" value=""><br>
+        <label for="item_code">SKU:</label><br>
+        <input type="text" id="item_code" name="item_code" value=""><br>
+        <label for="stock">Stock:</label><br>
+        <input type="text" id="stock" name="stock" value=""><br><br>
+        <button onclick="postItem()" class="btn btn-primary mb-2">Simpan</button>
         <br>
         <form id="/item/" role="search">
             <input type="search" id="query" name="q"
@@ -35,25 +33,21 @@
             <button>Search</button>
         </form>
         <br>
-        <div class="row">
-            <table>
-                <tr>
-                    <th>Nama Produk</th>
-                    <th>SKU</th>
-                    <th>Stok</th>
-                    <th>Action</th>
-                </tr>
-                <% for(let i = 0; i < items.length; i++) { %>
-                <tr>
-                    <td><%= items[i].item_name %></td>
-                    <td><%= items[i].item_code %></td>
-                    <td><%= items[i].stock %></td>
-                    <td><button onclick='deleteItem("<%= items[i].item_id %>")'>hapus</button></td>
-                </tr>
-                <% } %>
-              </table>
-
-        </div>        
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Barang</h3>
+            </div>
+            <div class="panel-body">
+                <table id="ItemTable" class="table table-striped table-bordered table-hover responsive" width="100%">
+                    <thead class="thin-border-bottom">
+                    <tr>
+                        <th>Nama Barang</th>
+                        <th>Kode Barang</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
     </main>
 
     <footer>
@@ -85,4 +79,49 @@
             alert(err.message);
         });
     };
+
+    function postItem() {
+        let item_name = $('#item_name').val();
+        let item_code = $('#item_code').val();
+        let stock = $('#stock').val();
+        axios.post(`${apiUrl}/item`, {item_name, item_code, stock}
+        ).then(function(res) {
+            if (res.data.success === 'ok') {
+                location.reload();
+            }
+        }).catch(function(err) {
+            alert(err.message);
+        });
+    }
+
+    (function($) {
+      var generateItemTable = $("#ItemTable")
+        .dataTable({
+          "processing": false,
+          "serverSide": false,
+          "ajax": {
+            "url": "/item/item-list"
+          },
+          "columns": [
+            { "data": "item_name" }, { "data": "item_code"},
+            {
+                        "data": "item_id",
+                        "render": function (data) {
+                            return `<div class="text-center">
+                            <a class='btn btn-danger text-white' style='cursor:pointer; width:100px;' onclick="deleteItem(${data})" >
+                               <i class='far fa-trash-alt'></i> Delete
+                            </a></div>
+                        `;
+                        }, "width": "5%"
+                    },
+          ],
+          "language": {
+            "emptyTable": "There are no customers at present.",
+            "zeroRecords": "There were no matching customers found."
+          },
+          "searching": true,
+          "ordering": true,
+          "paging": true
+        });
+    })(jQuery);
 </script>

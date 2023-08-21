@@ -7,7 +7,7 @@ const getBins = async (req, rep) => {
 const postBin = async (req, rep) => {
     const body = req.body;
     await req.systemDb.query(`insert into bin (bin_name, bin_code) values ($1, $2)`, [body.bin_name, body.bin_code]);
-    return rep.view("/templates/bin.ejs", { bins: await getAllBins(req)});
+    return rep.code(200).send({success: 'ok'});
 };
 
 const deleteBin = async (req, rep) => {
@@ -15,4 +15,9 @@ const deleteBin = async (req, rep) => {
     return rep.code(200).send({success: 'ok'});
 }
 
-module.exports = {getBins, postBin, deleteBin};
+const getAllBin = async (req, rep) => {
+    const bins = await getAllBins(req);
+    return rep.code(200).send({success: 'ok', data: bins});
+}
+
+module.exports = {getBins, postBin, deleteBin, getAllBin};

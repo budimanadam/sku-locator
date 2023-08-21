@@ -1,5 +1,5 @@
 'use strict'
-const {getBins, postBin, deleteBin} = require('../../handler/bin');
+const {getBins, postBin, deleteBin, getAllBin} = require('../../handler/bin');
 
 module.exports = async function(fastify, opts) {
     fastify.route({
@@ -33,5 +33,11 @@ module.exports = async function(fastify, opts) {
             description: 'Return Success',
             tags: ['bins']
         }
+    });
+
+    fastify.route({
+        method: 'GET',
+        url: '/bin-list',
+        handler: getAllBin
     });
 }

@@ -1,5 +1,5 @@
 'use strict'
-const {getItems, postItem, deleteItem, getItemsJson} = require('../../handler/item');
+const {getItems, postItem, deleteItem, getItemsJson, getAllItem} = require('../../handler/item');
 
 module.exports = async function(fastify, opts) {
     fastify.route({
@@ -44,5 +44,11 @@ module.exports = async function(fastify, opts) {
             description: 'Return Success',
             tags: ['items']
         }
+    });
+
+    fastify.route({
+        method: 'GET',
+        url: '/item-list',
+        handler: getAllItem
     });
 }
