@@ -19,13 +19,11 @@
             <h1>Daftar Rak</h1>
         </div>
 
-        <form action="/bin/" method="post">
-            <label for="bin_name">Nama Rak:</label><br>
-            <input type="text" id="bin_name" name="bin_name" value=""><br>
-            <label for="bin_code">Kode Rak:</label><br>
-            <input type="text" id="bin_code" name="bin_code" value=""><br><br>
-            <button id="buttonClick" type="submit" class="btn btn-primary mb-2">Submit</button>
-        </form>
+        <label for="bin_name">Nama Rak:</label><br>
+        <input type="text" id="bin_name" name="bin_name" value=""><br>
+        <label for="bin_code">Kode Rak:</label><br>
+        <input type="text" id="bin_code" name="bin_code" value=""><br><br>
+        <button onclick="postBin()" class="btn btn-primary mb-2">Simpan</button>
         <br>
         <form id="/bin/" role="search">
             <input type="search" id="query" name="q"
@@ -34,24 +32,22 @@
             <button>Cari</button>
         </form>
         <br>
-        <div class="row">
-
-            <table>
-                <tr>
-                    <th>Nama Rak</th>
-                    <th>Kode Rak</th>
-                    <th>Action</th>
-                </tr>
-                <% for(let i = 0; i < bins.length; i++) { %>
-                <tr>
-                    <td><%= bins[i].bin_name %></td>
-                    <td><%= bins[i].bin_code %></td>
-                    <td><button onclick='deleteBin("<%= bins[i].bin_id %>")'>hapus</button></td>
-                </tr>
-                <% } %>
-              </table>
-
-        </div>        
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Rak</h3>
+            </div>
+            <div class="panel-body">
+                <table id="BinTable" class="table table-striped table-bordered table-hover responsive" width="100%">
+                    <thead class="thin-border-bottom">
+                    <tr>
+                        <th>Nama Rak</th>
+                        <th>Kode Rak</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>      
     </main>
 
     <footer>
@@ -83,4 +79,48 @@
             alert(err.message);
         });
     };
+
+    function postBin() {
+        let bin_name = $('#bin_name').val();
+        let bin_code = $('#bin_code').val();
+        axios.post(`${apiUrl}/bin`, {bin_code, bin_name}
+        ).then(function(res) {
+            if (res.data.success === 'ok') {
+                location.reload();
+            }
+        }).catch(function(err) {
+            alert(err.message);
+        });
+    }
+
+    (function($) {
+      var generateBinTable = $("#BinTable")
+        .dataTable({
+          "processing": false,
+          "serverSide": false,
+          "ajax": {
+            "url": "/bin/bin-list"
+          },
+          "columns": [
+            { "data": "bin_name" }, { "data": "bin_code"},
+            {
+                        "data": "bin_id",
+                        "render": function (data) {
+                            return `<div class="text-center">
+                            <a class='btn btn-danger text-white' style='cursor:pointer; width:100px;' onclick="deleteBin(${data})" >
+                               <i class='far fa-trash-alt'></i> Delete
+                            </a></div>
+                        `;
+                        }, "width": "5%"
+                    },
+          ],
+          "language": {
+            "emptyTable": "There are no customers at present.",
+            "zeroRecords": "There were no matching customers found."
+          },
+          "searching": true,
+          "ordering": true,
+          "paging": true
+        });
+    })(jQuery);
 </script>

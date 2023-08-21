@@ -11,7 +11,7 @@ const getItemsJson = async (req, rep) => {
 const postItem = async (req, rep) => {
     const body = req.body;
     await req.systemDb.query(`insert into item (item_name, item_code, stock) values ($1, $2, $3)`, [body.item_name, body.item_code, body.stock]);
-    return rep.view("/templates/item.ejs", { items: await getAllItems(req) });
+    return rep.code(200).send({success: 'ok'});
 };
 
 const deleteItem = async (req, rep) => {
@@ -19,4 +19,8 @@ const deleteItem = async (req, rep) => {
     return rep.code(200).send({success: 'ok'});
 }
 
-module.exports = {getItems, postItem, deleteItem, getItemsJson};
+const getAllItem = async (req, rep) => {
+    return rep.code(200).send({success: 'ok', data: await getAllItems(req)});
+}
+
+module.exports = {getItems, postItem, deleteItem, getItemsJson, getAllItem};

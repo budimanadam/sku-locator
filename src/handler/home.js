@@ -8,8 +8,8 @@ const getHome = async (req, rep) => {
 }
 
 const getSkuBin = async (req, rep) => {
-    let res = await req.systemDb.query('select * from item');
-    return;
+    const skuLocations = await getAllBinItems(req);
+    return rep.code(200).send({success: 'ok', data: skuLocations});
 }
 
 const deleteBinItemRecord = async (req, rep) => {
@@ -18,11 +18,16 @@ const deleteBinItemRecord = async (req, rep) => {
 }
 
 const postBinItemRecord = async (req, rep) => {
-    await req.systemDb.query(`
+    if (req.body.bin_id && req.body.item_id) {
+        await req.systemDb.query(`
         INSERT INTO bin_item_activity (bin_id , item_id) 
         values ((select bin_id from bin where bin_id = $1 limit 1), (select item_id from item where item_id = $2 limit 1))`, [req.body.bin_id, req.body.item_id]);
-    return rep.view("/templates/index.ejs", { skuLocations: await getAllBinItems(req), items: await getAllItems(req), bins: await getAllBins(req)});
-
+    }
+    return rep.code(200).send({success: 'ok'});
 }
 
-module.exports = {getHome, deleteBinItemRecord, postBinItemRecord, getSkuBin};
+const post = async (req, rep) => {
+    return rep.view("/templates/index.ejs", { skuLocations: await getAllBinItems(req), items: await getAllItems(req), bins: await getAllBins(req)});
+}
+
+module.exports = {getHome, deleteBinItemRecord, postBinItemRecord, getSkuBin, post};

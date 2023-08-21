@@ -43,12 +43,6 @@ module.exports = async function (fastify, opts) {
     hookDone();
   })
 
-  // This loads and sets fastify/cors
-  fastify.register(require('@fastify/cors'), {
-    origin: ['http://localhost:8080', 'http://127.0.0.1:8080', 'http://localhost:3000'],
-    methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE']
-  })
-
   fastify.ready(err => {
     if (err) throw err
     fastify.swagger()

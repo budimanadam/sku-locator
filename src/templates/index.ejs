@@ -18,8 +18,7 @@
         <div class="jumbotron">
             <h1>SKU Locator</h1>
         </div>
-        <form action="/" method="post">
-            <label for="sku">SKU:</label>
+        <label for="sku">SKU:</label>
             <select id="itemSelection" name="item_id">
                 <option></option>
                 <% for(let i = 0; i < items.length; i++) { %>
@@ -33,8 +32,7 @@
                     <option value="<%= bins[i].bin_id %>" name="bin_id"><%= bins[i].bin_code %></option>
                 <% } %>
             </select>
-            <button id="buttonClick" type="submit" class="btn btn-primary mb-2">Simpan</button>
-        </form>
+            <button onclick="postBIA()" class="btn btn-primary mb-2">Simpan</button>
         <p id="demo"></p>
         <form id="/" role="search">
             <input type="search" id="query" name="q"
@@ -42,30 +40,25 @@
             <button>Search</button>
         </form>
         <br>
-        <div class="row">
-
-            <table>
-                <tr>
-                    <th>Nama Produk</th>
-                    <th>SKU</th>
-                    <th>Stok</th>
-                    <th>Nama Rak</th>
-                    <th>Kode Rak</th>
-                    <th>Action</th>
-                </tr>
-                <% for(let i = 0; i < skuLocations.length; i++) { %>
-                <tr>
-                    <td><%= skuLocations[i].item_name %></td>
-                    <td><%= skuLocations[i].item_code %></td>
-                    <td><%= skuLocations[i].stock %></td>
-                    <td><%= skuLocations[i].bin_name %></td>
-                    <td><%= skuLocations[i].bin_code %></td>
-                    <td><button onclick='deleteBIA("<%= skuLocations[i].bin_item_activity_id %>")'>hapus</button></td>
-                </tr>
-                <% } %>
-              </table>
-
-        </div>        
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Customers</h3>
+            </div>
+            <div class="panel-body">
+                <table id="SkuBinTable" class="table table-striped table-bordered table-hover responsive" width="100%">
+                    <thead class="thin-border-bottom">
+                    <tr>
+                        <th>Nama Produk</th>
+                        <th>SKU</th>
+                        <th>Stok</th>
+                        <th>Nama Rak</th>
+                        <th>Kode Rak</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
     </main>
     <footer>
         <%- include('./partials/footer'); %>
@@ -91,9 +84,9 @@
         // $('#binSelection').editableSelect({
         //     duration:'fast'
         // });
-        $('#datatext').on('keyup',function(){
-            $('#contentselect').focus().attr('size', 3);
-        }); 
+        // $('#datatext').on('keyup',function(){
+        //     $('#contentselect').focus().attr('size', 3);
+        // });
     });
     let apiUrl = '<%= process.env.API_URL %>';
     function deleteBIA(id) {
@@ -107,4 +100,48 @@
         });
     };
 
+    function postBIA() {
+        let bin_id = $('#binSelection').val();
+        let item_id = $('#itemSelection').val();
+        axios.post(`${apiUrl}/`, {bin_id, item_id}
+        ).then(function(res) {
+            if (res.data.success === 'ok') {
+                location.reload();
+            }
+        }).catch(function(err) {
+            alert(err.message);
+        });
+    }
+
+    (function($) {
+      var generateSkuBinTable = $("#SkuBinTable")
+        .dataTable({
+          "processing": false,
+          "serverSide": false,
+          "ajax": {
+            "url": "/sku-bin"
+          },
+          "columns": [
+            { "data": "item_name" }, { "data": "item_code" }, { "data": "stock" },
+            { "data": "bin_name" }, { "data": "bin_code"},
+            {
+                        "data": "bin_item_activity_id",
+                        "render": function (data) {
+                            return `<div class="text-center">
+                            <a class='btn btn-danger text-white' style='cursor:pointer; width:100px;' onclick="deleteBIA(${data})" >
+                               <i class='far fa-trash-alt'></i> Delete
+                            </a></div>
+                        `;
+                        }, "width": "5%"
+                    },
+          ],
+          "language": {
+            "emptyTable": "There are no customers at present.",
+            "zeroRecords": "There were no matching customers found."
+          },
+          "searching": true,
+          "ordering": true,
+          "paging": true
+        });
+    })(jQuery);
 </script>
