@@ -25,15 +25,16 @@
                     <option value="<%= items[i].item_id %>" name="item_id"><%= items[i].item_code %></option>
                 <% } %>
             </select>
-            <label for="bin">Kode Rak:</label>
+        <label for="bin">Kode Rak:</label>
             <select id="binSelection" name="bin_id">
                 <option></option>
                 <% for(let i = 0; i < bins.length; i++) { %>
                     <option value="<%= bins[i].bin_id %>" name="bin_id"><%= bins[i].bin_code %></option>
                 <% } %>
             </select>
-            <button onclick="postBIA()" class="btn btn-primary mb-2">Simpan</button>
-        <p id="demo"></p>
+        <button onclick="postBIA()" class="btn btn-primary mb-2">Simpan</button>
+        <button onclick="exportSkuBin()" class="btn btn-primary mb-2">Export</button>
+
         <form id="/" role="search">
             <input type="search" id="query" name="q"
              placeholder="Cari SKU/Kode Rak">
@@ -42,7 +43,7 @@
         <br>
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title">Customers</h3>
+                <h3 class="panel-title">SKU BIN</h3>
             </div>
             <div class="panel-body">
                 <table id="SkuBinTable" class="table table-striped table-bordered table-hover responsive" width="100%">
@@ -99,6 +100,10 @@
             alert(err.message);
         });
     };
+
+    function exportSkuBin() {
+        window.open(`${apiUrl}/export/sku-bin`);
+    }
 
     function postBIA() {
         let bin_id = $('#binSelection').val();

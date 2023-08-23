@@ -1,5 +1,5 @@
 'use strict'
-const {getHome, deleteBinItemRecord, postBinItemRecord, getSkuBin, post} = require('../handler/home');
+const {getHome, deleteBinItemRecord, postBinItemRecord, getSkuBin, post, exportSkuBin} = require('../handler/home');
 
 module.exports = async function(fastify, opts) {
     fastify.route({
@@ -41,9 +41,9 @@ module.exports = async function(fastify, opts) {
         }
     });
 
-    // fastify.route({
-    //     method: 'POST',
-    //     url: '/',
-    //     handler: post
-    // });
+    fastify.route({
+        method: 'GET',
+        url: '/export/sku-bin',
+        handler: exportSkuBin
+    });
 }
