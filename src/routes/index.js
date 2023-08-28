@@ -1,10 +1,11 @@
 'use strict'
-const {getHome, deleteBinItemRecord, postBinItemRecord, getSkuBin, post, exportSkuBin} = require('../handler/home');
+const {getHome, deleteBinItemRecord, postBinItemRecord, getSkuBin, post, exportSkuBin, login, loginPage} = require('../handler/home');
+const {auth} = require('../utils/auth')
 
 module.exports = async function(fastify, opts) {
     fastify.route({
         method: 'GET',
-        url: '/',
+        url: '/home',
         handler: getHome,
         schema: {
             summary: 'Return Home',
@@ -16,12 +17,14 @@ module.exports = async function(fastify, opts) {
     fastify.route({
         method: 'GET',
         url: '/sku-bin',
+        preHandler: [auth],
         handler: getSkuBin
     });
 
     fastify.route({
         method: 'DELETE',
         url: '/',
+        preHandler: [auth],
         handler: deleteBinItemRecord,
         schema: {
             summary: 'Return Home',
@@ -33,6 +36,7 @@ module.exports = async function(fastify, opts) {
     fastify.route({
         method: 'POST',
         url: '/',
+        preHandler: [auth],
         handler: postBinItemRecord,
         schema: {
             summary: 'Return Home',
@@ -45,5 +49,17 @@ module.exports = async function(fastify, opts) {
         method: 'GET',
         url: '/export/sku-bin',
         handler: exportSkuBin
+    });
+
+    fastify.route({
+        method: 'POST',
+        url: '/login',
+        handler: login
+    });
+    
+    fastify.route({
+        method: 'GET',
+        url: '/',
+        handler: loginPage
     });
 }

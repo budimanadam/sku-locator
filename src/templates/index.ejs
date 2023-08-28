@@ -15,9 +15,14 @@
             </div>
           <% } %>
 
+          <%if (typeof(userCode) !== "undefined" && userCode ) { %>
+            <input type="text" value="<%= userCode %>" hidden="true" id="userCodeInput">
+          <% } %>
+
         <div class="jumbotron">
             <h1>SKU Locator</h1>
         </div>
+
         <label for="sku">SKU:</label>
             <select id="itemSelection" name="item_id">
                 <option></option>
@@ -89,10 +94,14 @@
         //     $('#contentselect').focus().attr('size', 3);
         // });
     });
+
+    const userCodeInput = $('#userCodeInput').val();
+    localStorage.setItem('userCode', userCodeInput);
+    const userCodeLocalStorage = localStorage.getItem('userCode');
     let apiUrl = '<%= process.env.API_URL %>';
     function deleteBIA(id) {
-        axios.delete(`${apiUrl}/`, {data: {bin_item_activity_id: id}
-        }).then(function(res) {
+        axios.delete(`${apiUrl}/`, {data: {bin_item_activity_id: id}}, {headers: {authorization: userCodeLocalStorage}}
+        ).then(function(res) {
             if (res.data.success === 'ok') {
                 location.reload();
             }
@@ -108,7 +117,7 @@
     function postBIA() {
         let bin_id = $('#binSelection').val();
         let item_id = $('#itemSelection').val();
-        axios.post(`${apiUrl}/`, {bin_id, item_id}
+        axios.post(`${apiUrl}/`, {bin_id, item_id}, {headers: {authorization: userCodeLocalStorage}}
         ).then(function(res) {
             if (res.data.success === 'ok') {
                 location.reload();
@@ -124,7 +133,10 @@
           "processing": false,
           "serverSide": false,
           "ajax": {
-            "url": "/sku-bin"
+            "url": "/sku-bin",
+            "headers": {
+                "authorization": userCodeLocalStorage
+            }
           },
           "columns": [
             { "data": "item_name" }, { "data": "item_code" }, { "data": "stock" },

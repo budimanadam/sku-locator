@@ -31,6 +31,19 @@ const post = async (req, rep) => {
     return rep.view("/templates/index.ejs", { skuLocations: await getAllBinItems(req), items: await getAllItems(req), bins: await getAllBins(req)});
 }
 
+const loginPage = async (req, rep) => {
+    return rep.view("/templates/login.ejs");
+}
+
+const login = async (req, rep) => {
+    const validate = await req.systemDb.query(`select * from public.user where user_code = $1`, [req.body.user_code]);
+    if (validate.length === 0) {
+        return rep.view("/templates/login.ejs", { error: true, messages: 'user not exist' });
+    }
+    const userCode = req.body.user_code;
+    return rep.view("/templates/index.ejs", { skuLocations: await getAllBinItems(req), items: await getAllItems(req), bins: await getAllBins(req), userCode: userCode});
+}
+
 const exportSkuBin = async (req, rep) => {
     const skuLocations = await getAllBinItems(req);
     let det = [];
@@ -70,4 +83,4 @@ const exportSkuBin = async (req, rep) => {
         .code(200).send(result);
 }
 
-module.exports = {getHome, deleteBinItemRecord, postBinItemRecord, getSkuBin, post, exportSkuBin};
+module.exports = {getHome, deleteBinItemRecord, postBinItemRecord, getSkuBin, post, exportSkuBin, login, loginPage};
