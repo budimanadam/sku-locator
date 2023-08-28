@@ -1,5 +1,6 @@
 'use strict'
 const {getItems, postItem, deleteItem, getItemsJson, getAllItem} = require('../../handler/item');
+const {auth} = require('../../utils/auth');
 
 module.exports = async function(fastify, opts) {
     fastify.route({
@@ -16,6 +17,7 @@ module.exports = async function(fastify, opts) {
     fastify.route({
         method: 'GET',
         url: '/list-item',
+        preHandler: [auth],
         handler: getItemsJson,
         schema: {
             summary: 'Return Items in Json',
@@ -27,6 +29,7 @@ module.exports = async function(fastify, opts) {
     fastify.route({
         method: 'POST',
         url: '/',
+        preHandler: [auth],
         handler: postItem,
         schema: {
             summary: 'Return Items',
@@ -38,6 +41,7 @@ module.exports = async function(fastify, opts) {
     fastify.route({
         method: 'DELETE',
         url: '/',
+        preHandler: [auth],
         handler: deleteItem,
         schema: {
             summary: 'Return success',
@@ -49,6 +53,7 @@ module.exports = async function(fastify, opts) {
     fastify.route({
         method: 'GET',
         url: '/item-list',
+        preHandler: [auth],
         handler: getAllItem
     });
 }

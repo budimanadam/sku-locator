@@ -69,9 +69,11 @@
 </style>
 <script>
     let apiUrl = '<%= process.env.API_URL %>';
+    const userCodeLocalStorage = localStorage.getItem('userCode');
+
     function deleteBin(id) {
-        axios.delete(`${apiUrl}/bin/`, {data: {bin_id: id}
-        }).then(function(res) {
+        axios.delete(`${apiUrl}/bin/`, {data: {bin_id: id}}, {headers: {authorization: userCodeLocalStorage}}
+        ).then(function(res) {
             if (res.data.success === 'ok') {
                 location.reload();
             }
@@ -83,7 +85,7 @@
     function postBin() {
         let bin_name = $('#bin_name').val();
         let bin_code = $('#bin_code').val();
-        axios.post(`${apiUrl}/bin`, {bin_code, bin_name}
+        axios.post(`${apiUrl}/bin`, {bin_code, bin_name}, {headers: {authorization: userCodeLocalStorage}}
         ).then(function(res) {
             if (res.data.success === 'ok') {
                 location.reload();
@@ -99,7 +101,10 @@
           "processing": false,
           "serverSide": false,
           "ajax": {
-            "url": "/bin/bin-list"
+            "url": "/bin/bin-list",
+            "headers": {
+                "authorization": userCodeLocalStorage
+            }
           },
           "columns": [
             { "data": "bin_name" }, { "data": "bin_code"},

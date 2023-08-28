@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('./partials/head'); %>
+    </head>
+<body class="container">
+
+    <main>
+        <%if (typeof(error) !== "undefined" && error === true) { %>
+            <div class="alert alert-danger" role="alert">
+              <%= messages %>
+            </div>
+          <% } %>
+
+        <div class="jumbotron">
+            <h1>Halaman Login</h1>
+        </div>
+
+        <form action="/login" method="post">
+            <div class="form-group">
+                <label for="user_code">User code:</label><br>
+                <input type="text" id="user_code" name="user_code" value=""><br>
+            </div>
+            <button id="buttonClick" type="submit" class="btn btn-primary mb-2">Login</button>
+          </form>
+    </main>
+
+    <footer>
+        <%- include('./partials/footer'); %>
+    </footer>
+
+</body>
+</html>
+
+<style>
+    table, td, th {
+       border: 1px solid;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+</style>
+<script>
+    let apiUrl = '<%= process.env.API_URL %>';
+
+    const userCodeLocalStorage = localStorage.getItem('userCode');
+    if (userCodeLocalStorage) {
+        axios.post(`${apiUrl}/login`, {user_code: userCodeLocalStorage}
+        ).then(function(res) {
+            if (res.statusText === 'OK') {
+                window.location.href = `${apiUrl}/home`;
+            }
+        }).catch(function(err) {
+            alert(err.message);
+        });
+    }
+
+    function login() {
+        let user_code = $('#user_code').val();
+        axios.post(`${apiUrl}/login`, {user_code}
+        ).then(function(res) {
+            if (res.data.success === 'ok') {
+                location.reload();
+            }
+        }).catch(function(err) {
+            alert(err.message);
+        });
+    }
+</script>

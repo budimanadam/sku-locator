@@ -69,9 +69,11 @@
 </style>
 <script>
     let apiUrl = '<%= process.env.API_URL %>';
+    const userCodeLocalStorage = localStorage.getItem('userCode');
+
     function deleteItem(id) {
-        axios.delete(`${apiUrl}/item/`, {data: {item_id: id}
-        }).then(function(res) {
+        axios.delete(`${apiUrl}/item/`, {data: {item_id: id}}, {headers: {authorization: userCodeLocalStorage}}
+        ).then(function(res) {
             if (res.data.success === 'ok') {
                 location.reload();
             }
@@ -84,7 +86,7 @@
         let item_name = $('#item_name').val();
         let item_code = $('#item_code').val();
         let stock = $('#stock').val();
-        axios.post(`${apiUrl}/item`, {item_name, item_code, stock}
+        axios.post(`${apiUrl}/item`, {item_name, item_code, stock}, {headers: {authorization: userCodeLocalStorage}}
         ).then(function(res) {
             if (res.data.success === 'ok') {
                 location.reload();
@@ -100,7 +102,10 @@
           "processing": false,
           "serverSide": false,
           "ajax": {
-            "url": "/item/item-list"
+            "url": "/item/item-list",
+            "headers": {
+                "authorization": userCodeLocalStorage
+            }
           },
           "columns": [
             { "data": "item_name" }, { "data": "item_code"},
